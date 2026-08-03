@@ -14,7 +14,7 @@ class SegundaThread extends Thread {
     }
 }
 
-public class Main {
+public class Thread1 {
     public static void main(String[] args) {
         PrimeiraThread t1 = new PrimeiraThread();
         SegundaThread t2 = new SegundaThread();
