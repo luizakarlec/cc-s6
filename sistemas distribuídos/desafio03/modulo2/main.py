@@ -1,16 +1,15 @@
 from controller import Controller
-from model import Banco
+from model import Model
 from view import View
 
 def main():
     """
-    Inicializa a view, model(banco) e a controller
+    Inicializa a view, model e a controller
     executa o sistema por meio da controller
     """        
-    banco = Banco()
+    model = Model()
     view = View()
-    controller = Controller(banco, view)
-
+    controller = Controller(model, view)
     controller.executar()
     
 if __name__ == "__main__":

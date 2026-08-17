@@ -1,11 +1,23 @@
 import threading
 
 class Controller:
+    """
+    Classe responsável por controlar a execução das vendas
+    """    
     def __init__(self, model, view):
+        """
+        Inicializa a controller
+        Args:
+            model (Banco): responsável pelo controle do saldo central
+            view (View): responsável pela exibição das informações
+        """        
         self.model = model
         self.view = view
 
     def executar(self):
+        """
+        Função responsável pela simulção das vendas em 5 caixas, cada caixa é representado por uma thread e ao final a soma das vendas é exibida
+        """        
         t1 = threading.Thread(target=self.model.venda, args=(10,))
         t2 = threading.Thread(target=self.model.venda, args=(10,))
         t3 = threading.Thread(target=self.model.venda, args=(10,))
