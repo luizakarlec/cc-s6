@@ -1,5 +1,5 @@
 -- Arquivo componente_sistema.vhd
--- Sistema com portas AND e NOT e OR
+-- Sistema com portas OR, AND e NOT
 library IEEE;
 use IEEE.std_logic_1164.all;
 
