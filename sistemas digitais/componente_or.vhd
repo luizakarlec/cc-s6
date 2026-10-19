@@ -13,5 +13,5 @@ end componente_or;
   
 architecture arquitetura_or of componente_or is
 begin
-  f <= d and e;
+  f <= d or e;
 end arquitetura_or;
