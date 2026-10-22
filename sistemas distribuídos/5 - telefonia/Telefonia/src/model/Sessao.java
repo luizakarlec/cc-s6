@@ -1,5 +1,5 @@
 
-package servidor;
+package model;
 
 import java.util.Objects;
 import java.io.Serializable;

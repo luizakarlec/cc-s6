@@ -1,18 +1,23 @@
 package cliente;
 
+import java.net.MalformedURLException;
 import javax.swing.JOptionPane;
-import servidor.Sessao;
-import servidor.TabelaHash;
-import servidor.Util;
+import model.TabelaHash;
 
-public class JFrameServidor extends javax.swing.JFrame {
+import java.rmi.Naming;
+import java.rmi.NotBoundException;
+import java.rmi.RemoteException;
+import model.Sessao;
+import model.IBuscarSessao;
+
+public class JFrameCliente extends javax.swing.JFrame {
     
-    private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(JFrameServidor.class.getName());
+    private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(JFrameCliente.class.getName());
 
     /**
      * Creates new form JFrameServidor
      */
-    public JFrameServidor() {
+    public JFrameCliente() {
         initComponents();
         hashSessoes = new TabelaHash();
         jPanelResultados.setVisible(false);
@@ -139,41 +144,65 @@ public class JFrameServidor extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButtonCarregarArquivoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCarregarArquivoActionPerformed
-        StringBuilder dadosSessoes = new StringBuilder();
-        if (jTextFieldCaminhoArquivo.getText().equals("")) {
-            JOptionPane.showMessageDialog(this,"Informe o nome do arquivo!");
-            jTextFieldCaminhoArquivo.requestFocus();
-            return;
+        try {
+            StringBuilder dadosSessoes = new StringBuilder();
+            if (jTextFieldCaminhoArquivo.getText().equals("")) {
+                JOptionPane.showMessageDialog(this,"Informe o nome do arquivo!");
+                jTextFieldCaminhoArquivo.requestFocus();
+                return;
+            }
+            
+            // pedir para carregar arquivo
+            IBuscarSessao c = (IBuscarSessao) Naming.lookup("rmi://localhost/BuscarSessao");
+            String resposta = c.carregarArquivoEmHashMap(jTextFieldCaminhoArquivo.getText(), hashSessoes.sessoes, dadosSessoes);
+            
+            //String resposta = Util.carregarArquivoEmHashMap(jTextFieldCaminhoArquivo.getText(), hashSessoes.sessoes, dadosSessoes);
+            
+            if (!resposta.equals("")) {
+                JOptionPane.showMessageDialog(this, resposta);
+                jTextFieldCaminhoArquivo.setText("");
+                return;
+            }
+            
+            jTextAreaDadosSessoes.setText(dadosSessoes.toString());
+            jPanelResultados.setVisible(true);
+        } catch (NotBoundException ex) {
+            System.getLogger(JFrameCliente.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+        } catch (MalformedURLException ex) {
+            System.getLogger(JFrameCliente.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+        } catch (RemoteException ex) {
+            System.getLogger(JFrameCliente.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
         }
-        String resposta = Util.carregarArquivoEmHashMap(jTextFieldCaminhoArquivo.getText(), hashSessoes.sessoes, dadosSessoes);
-        if (!resposta.equals("")) {
-            JOptionPane.showMessageDialog(this, resposta);
-            jTextFieldCaminhoArquivo.setText("");
-            return;
-        }
-        
-        jTextAreaDadosSessoes.setText(dadosSessoes.toString());
-        jPanelResultados.setVisible(true);
-        
-        
     }//GEN-LAST:event_jButtonCarregarArquivoActionPerformed
 
     private void jButtonPesquisarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonPesquisarActionPerformed
-        // TODO add your handling code here:
-        if (jTextFieldNumeroCelularPesquisa.getText().equals("")) {
-            JOptionPane.showMessageDialog(this,"Número de celular não informado");
-            jTextFieldNumeroCelularPesquisa.requestFocus();
-            return;
+        try {
+            // TODO add your handling code here:
+            if (jTextFieldNumeroCelularPesquisa.getText().equals("")) {
+                JOptionPane.showMessageDialog(this,"Número de celular não informado");
+                jTextFieldNumeroCelularPesquisa.requestFocus();
+                return;
+            }
+            
+            // pedir para buscar sessao do numero
+            IBuscarSessao c = (IBuscarSessao) Naming.lookup("rmi://localhost/BuscarSessao");
+            String numeroPesquisa = jTextFieldNumeroCelularPesquisa.getText();
+            Sessao sessao = c.buscarSessao(numeroPesquisa, hashSessoes.sessoes);
+
+            if (sessao == null) {
+                JOptionPane.showMessageDialog(this,"Número de celular não encontrado");
+                jTextFieldNumeroCelularPesquisa.setText("");
+                jTextFieldNumeroCelularPesquisa.requestFocus();
+                return;
+            }
+            jTextAreaResultadoPesquisa.setText(sessao.toString());
+        } catch (NotBoundException ex) {
+            System.getLogger(JFrameCliente.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+        } catch (MalformedURLException ex) {
+            System.getLogger(JFrameCliente.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+        } catch (RemoteException ex) {
+            System.getLogger(JFrameCliente.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
         }
-        
-        Sessao sessao = hashSessoes.sessoes.get(jTextFieldNumeroCelularPesquisa.getText());
-        if (sessao == null) {
-            JOptionPane.showMessageDialog(this,"Número de celular não encontrado");
-            jTextFieldNumeroCelularPesquisa.setText("");
-            jTextFieldNumeroCelularPesquisa.requestFocus();
-            return;
-        }
-        jTextAreaResultadoPesquisa.setText(sessao.toString());
     }//GEN-LAST:event_jButtonPesquisarActionPerformed
 
     /**
@@ -198,7 +227,7 @@ public class JFrameServidor extends javax.swing.JFrame {
         //</editor-fold>
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(() -> new JFrameServidor().setVisible(true));
+        java.awt.EventQueue.invokeLater(() -> new JFrameCliente().setVisible(true));
         
     }
 

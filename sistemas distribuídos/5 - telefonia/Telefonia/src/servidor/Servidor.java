@@ -1,17 +1,19 @@
 package servidor;
 
+import cliente.JFrameCliente;
 import java.rmi.Naming;
+import java.rmi.Remote;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 
 public class Servidor {
-    String HOST_URL = "rmi://localhost/GerarEmail";
+    String HOST_URL = "rmi://localhost/BuscarSessao";
     
     public Servidor(){
         try {
             LocateRegistry.createRegistry(Registry.REGISTRY_PORT);
-            JFrameServidor objetoRemoto = new JFrameServidor();
-            Naming.bind(HOST_URL, objetoRemoto);
+            BuscarSessao objetoRemoto = new BuscarSessao();
+            Naming.rebind(HOST_URL, (Remote) objetoRemoto);
             System.out.println("Servidor online e no aguardo....");
         } catch (Exception e) {
             System.out.println("Error: " + e);

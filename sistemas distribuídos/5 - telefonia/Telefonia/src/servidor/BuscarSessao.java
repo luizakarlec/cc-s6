@@ -1,16 +1,37 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
 package servidor;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.rmi.RemoteException;
+import java.rmi.server.UnicastRemoteObject;
 import java.util.HashMap;
 import java.util.List;
-import servidor.Sessao;
+import model.Sessao;
+import model.IBuscarSessao;
 
-public class Util {
 
-    public static String carregarArquivoEmHashMap(String nomeArquivo, HashMap<String, Sessao> sessoes, StringBuilder dadosSessoes) {
+/**
+ *
+ * @author luiza
+ */
+public class BuscarSessao extends UnicastRemoteObject implements IBuscarSessao {
+    
+    public BuscarSessao() throws RemoteException {
+    }
+
+    @Override
+    public Sessao buscarSessao(String s, HashMap<String, Sessao> sessoes) throws RemoteException {
+        return sessoes.get(s);
+    }
+    
+    @Override
+    public String carregarArquivoEmHashMap(String nomeArquivo, HashMap<String, Sessao> sessoes, StringBuilder dadosSessoes) {
         try {
             Path caminho = Paths.get(nomeArquivo);
 
@@ -39,4 +60,5 @@ public class Util {
             return "Erro ao processar o arquivo: " + e.getMessage();
         }
     }
+
 }
