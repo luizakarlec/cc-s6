@@ -1,4 +1,4 @@
--- Arquivo componente_or.vhd
+-- Arquivo exercicio_3.vhdl
 -- Modelo exercicio 3
 library IEEE;
 use IEEE.std_logic_1164.all;
