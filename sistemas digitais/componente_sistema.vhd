@@ -24,7 +24,8 @@ signal s1, s2, s4 : bit;
 
 
 begin
-or1: componente_or port map (d => in1, e => in2, f => s1);
-and2: componente_and port map (a => in3, b => in4, c => s2);
-not2: componente_not port map (x => s2, y => s4);
-or2: componente_or port map (d => s1, e => s4, f => out1);
+    or1: componente_or port map (d => in1, e => in2, f => s1);
+    and2: componente_and port map (a => in3, b => in4, c => s2);
+    not2: componente_not port map (x => s2, y => s4);
+    or2: componente_or port map (d => s1, e => s4, f => out1);
+end        
